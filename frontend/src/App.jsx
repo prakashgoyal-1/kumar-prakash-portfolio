@@ -9,6 +9,8 @@ import GlobalStyles from "./theme/GlobalStyles";
 import { ToastProvider } from "./components/ui/ToastProvider/ToastProvider";
 import Navbar from "./components/layout/Navbar/Navbar";
 import Footer from "./components/layout/Footer/Footer";
+import AuthGuard from "./components/layout/AuthGuard/AuthGuard";
+import AdminGuard from "./components/layout/AdminGuard/AdminGuard";
 
 import Home from "./pages/Home/Home";
 import About from "./pages/About/About";
@@ -41,13 +43,25 @@ export default function App() {
             <Navbar />
             <Box component="main" sx={{ flexGrow: 1 }}>
               <Routes>
+                {/* Public routes */}
                 <Route path="/" element={<Home />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/projects" element={<Projects />} />
                 <Route path="/resume" element={<Resume />} />
                 <Route path="/feedback" element={<Feedback />} />
                 <Route path="/login" element={<Login />} />
-                <Route path="/admin" element={<AdminDashboard />} />
+
+                {/* Admin-only route */}
+                <Route
+                  path="/admin"
+                  element={
+                    <AdminGuard>
+                      <AdminDashboard />
+                    </AdminGuard>
+                  }
+                />
+
+                {/* 404 */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Box>
