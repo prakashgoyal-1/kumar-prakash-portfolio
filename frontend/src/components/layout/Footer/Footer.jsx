@@ -28,14 +28,14 @@ export default function Footer() {
       }}
     >
       <Typography variant="body2" color="text.secondary">
-        © {year} Personal Portfolio. All rights reserved.
+        © {year} Kumar Prakash. All rights reserved.
       </Typography>
 
       <Box sx={{ display: "flex", gap: 0.5 }}>
         <Tooltip title="GitHub">
           <IconButton
             component="a"
-            href="https://github.com"
+            href="https://github.com/prakashgoyal-1"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="GitHub"
@@ -49,7 +49,7 @@ export default function Footer() {
         <Tooltip title="LinkedIn">
           <IconButton
             component="a"
-            href="https://linkedin.com"
+            href="https://www.linkedin.com/in/prakashgoyal1/"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="LinkedIn"

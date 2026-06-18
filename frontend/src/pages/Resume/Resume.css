@@ -1,9 +1,27 @@
-.page-placeholder {
+.resume-page {
+  padding-top: 2.5rem;
+  padding-bottom: 4rem;
+}
+
+.resume-current-card {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  min-height: 60vh;
-  gap: 1rem;
-  text-align: center;
+  gap: 16px;
+  padding: 16px 20px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.resume-current-card__icon {
+  font-size: 2.25rem !important;
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+  .resume-current-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }

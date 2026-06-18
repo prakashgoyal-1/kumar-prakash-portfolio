@@ -83,7 +83,6 @@ export default function App() {
             >
               <Footer />
             </Box>
-            {/* <Footer /> */}
           </Box>
         </BrowserRouter>
       </ToastProvider>
