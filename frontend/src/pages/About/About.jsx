@@ -325,7 +325,7 @@ export default function About() {
       ) : (
         <Stack spacing={1.5}>
           {certifications.map((cert) => (
-            <Card key={cert.id} variant="outlined">
+            <Card key={cert.id} variant="outlined" sx={{ minHeight: 88 }}>
               <CardContent
                 sx={{
                   display: "flex",

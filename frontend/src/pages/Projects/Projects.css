@@ -1,0 +1,29 @@
+/* frontend/src/pages/Projects/Projects.css */
+.projects-page {
+  padding-top: 2.5rem;
+  padding-bottom: 5rem;
+}
+
+/* CSS Grid with auto-fill: every column is EXACTLY 280px (or grows equally
+   if space allows), and a sparse last row NEVER stretches its items wider
+   than the columns above it. This is the fix for the uneven-width bug. */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+  /* Justify so a short last row aligns left instead of centering/stretching */
+  justify-content: start;
+}
+
+.project-skeleton-card {
+  height: 360px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+@media (max-width: 600px) {
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
+}

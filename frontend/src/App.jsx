@@ -41,7 +41,14 @@ export default function App() {
             }}
           >
             <Navbar />
-            <Box component="main" sx={{ flexGrow: 1 }}>
+            <Box
+              component="main"
+              sx={{
+                flexGrow: 1,
+                overflowY: "auto", // page content scrolls independently
+                paddingBottom: "60px", // reserve space for fixed footer
+              }}
+            >
               <Routes>
                 {/* Public routes */}
                 <Route path="/" element={<Home />} />
@@ -65,7 +72,18 @@ export default function App() {
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Box>
-            <Footer />
+            <Box
+              sx={{
+                position: "fixed",
+                bottom: 0,
+                left: 0,
+                right: 0,
+                zIndex: 10,
+              }}
+            >
+              <Footer />
+            </Box>
+            {/* <Footer /> */}
           </Box>
         </BrowserRouter>
       </ToastProvider>
