@@ -42,17 +42,11 @@ export default function Projects() {
     setTechFilter,
     loadMore,
     hasMore,
+    techTags,
     createProject,
     updateProject,
     deleteProject,
   } = useProjects();
-
-  // ── Derive the set of all distinct tech tags across loaded projects ────────
-  const allTechs = useMemo(() => {
-    const set = new Set();
-    projects.forEach((p) => (p.tech_stack || []).forEach((t) => set.add(t)));
-    return Array.from(set).sort();
-  }, [projects]);
 
   // ── Dialog state ─────────────────────────────────────────────────────────
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -108,7 +102,7 @@ export default function Projects() {
       </Typography>
 
       {/* ── Tech filter chips ─────────────────────────────────────────── */}
-      {allTechs.length > 0 && (
+      {techTags.length > 0 && (
         <Stack
           direction="row"
           spacing={1}
@@ -116,7 +110,7 @@ export default function Projects() {
           useFlexGap
           sx={{ mb: 3 }}
         >
-          {allTechs.map((tech) => (
+          {techTags.map((tech) => (
             <Chip
               key={tech}
               label={tech}

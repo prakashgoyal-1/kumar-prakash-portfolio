@@ -11,6 +11,7 @@ export function useProjects() {
   const [error, setError] = useState(null);
   const [techFilter, setTechFilterState] = useState(null);
   const [offset, setOffset] = useState(0);
+  const [techTags, setTechTags] = useState([]);
 
   const showToast = useUIStore((s) => s.showToast);
 
@@ -37,6 +38,24 @@ export function useProjects() {
       setLoading(false);
     }
   }, []);
+
+  // Fetch ALL projects once (unfiltered, high limit) just to derive the
+  // stable tag list — independent of whatever filter/pagination is active
+  // for the displayed project grid. No new backend endpoint required.
+  useEffect(() => {
+    projectsApi
+      .listProjects({ limit: 100, offset: 0 }) // no `tech` param = unfiltered
+      .then((res) => {
+        const set = new Set();
+        res.items.forEach((p) =>
+          (p.tech_stack || []).forEach((t) => set.add(t)),
+        );
+        setTechTags(Array.from(set).sort());
+      })
+      .catch(() => {
+        // Fail silently — chip row just won't render
+      });
+  }, []); // run once on mount only
 
   useEffect(() => {
     load(techFilter, 0);
@@ -122,6 +141,7 @@ export function useProjects() {
     setTechFilter,
     loadMore,
     hasMore,
+    techTags,
     createProject,
     updateProject,
     deleteProject,
