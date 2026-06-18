@@ -1,7 +1,7 @@
 import uuid
 from datetime import date
 
-from pydantic import BaseModel, ConfigDict, HttpUrl
+from pydantic import BaseModel, ConfigDict, HttpUrl, Field
 from typing import Optional
 
 
@@ -29,22 +29,12 @@ class AboutOut(BaseModel):
 class SkillCreate(BaseModel):
     name: str
     category: str
-    level: int  # 1–5 validated at DB level; add Pydantic guard too
-
-    @classmethod
-    def __get_validators__(cls):
-        yield cls.validate_level
-
-    def validate_level(cls, v):
-        if not (1 <= v <= 5):
-            raise ValueError("level must be between 1 and 5")
-        return v
-
+    level: int = Field(ge=1, le=5)
 
 class SkillUpdate(BaseModel):
     name: Optional[str] = None
     category: Optional[str] = None
-    level: Optional[int] = None
+    level: Optional[int] = Field(default=None, ge=1, le=5)
 
 
 class SkillOut(BaseModel):

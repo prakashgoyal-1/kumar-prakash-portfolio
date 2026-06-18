@@ -29,7 +29,7 @@ def run_migrations_offline() -> None:
     url = "postgresql+asyncpg://postgres:postgres_pwd@postgres:5432/portfolio"
     # url = settings.DATABASE_URL
 
-s    context.configure(
+    context.configure(
         url=url,
         target_metadata=target_metadata,
         literal_binds=True,
