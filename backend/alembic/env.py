@@ -13,6 +13,7 @@ from app.models import user  # noqa: F401
 from app.models import about      # noqa: F401
 from app.models import skill      # noqa: F401
 from app.models import certification  # noqa: F401
+from app.models import project        # noqa: F401
 
 # Alembic Config object — gives access to alembic.ini values
 config = context.config
@@ -23,12 +24,11 @@ if config.config_file_name is not None:
 
 target_metadata = Base.metadata
 
+print('settings.DATABASE_URL: ',settings.DATABASE_URL)
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode (no DB connection needed)."""
-    url = "postgresql+asyncpg://postgres:postgres_pwd@postgres:5432/portfolio"
-    # url = settings.DATABASE_URL
-
+    url = settings.DATABASE_URL
     context.configure(
         url=url,
         target_metadata=target_metadata,
