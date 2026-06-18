@@ -1,12 +1,10 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Grid";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import Skeleton from "@mui/material/Skeleton";
-import Fab from "@mui/material/Fab";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
@@ -94,12 +92,28 @@ export default function Projects() {
 
   return (
     <Container maxWidth="lg" className="projects-page">
-      <Typography variant="h4" fontWeight={700} sx={{ mb: 1 }}>
-        Projects
-      </Typography>
-      <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-        A selection of things I've built.
-      </Typography>
+      {/* ── Page header with inline Add Project button ─────────────────── */}
+      <Box className="projects-page__header">
+        <Box>
+          <Typography variant="h4" fontWeight={700}>
+            Projects
+          </Typography>
+          <Typography variant="body1" color="text.secondary">
+            A selection of things I've built.
+          </Typography>
+        </Box>
+
+        {isAdmin && (
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={openAdd}
+            className="projects-page__add-btn"
+          >
+            Add Project
+          </Button>
+        )}
+      </Box>
 
       {/* ── Tech filter chips ─────────────────────────────────────────── */}
       {techTags.length > 0 && (
@@ -131,56 +145,6 @@ export default function Projects() {
       )}
 
       {/* ── Loading skeleton grid ───────────────────────────────────── */}
-      {/* {loading && projects.length === 0 ? (
-        <Grid container spacing={3}>
-          {Array.from({ length: 6 }).map((_, i) => (
-            <Grid item xs={12} sm={6} md={4} key={i}>
-              <Box className="project-skeleton-card">
-                <Skeleton variant="rectangular" height={140} />
-                <Box sx={{ p: 2 }}>
-                  <Skeleton variant="text" height={28} width="70%" />
-                  <Skeleton variant="text" height={20} />
-                  <Skeleton variant="text" height={20} width="85%" />
-                  <Skeleton
-                    variant="rounded"
-                    height={28}
-                    width="60%"
-                    sx={{ mt: 1 }}
-                  />
-                </Box>
-              </Box>
-            </Grid>
-          ))}
-        </Grid>
-      ) : projects.length === 0 ? (
-        <Box sx={{ textAlign: "center", py: 8 }}>
-          <Typography variant="h6" color="text.secondary">
-            No projects yet.
-          </Typography>
-        </Box>
-      ) : (
-        <>
-          <Grid container spacing={3}>
-            {projects.map((project) => (
-              <Grid item xs={12} sm={6} md={4} key={project.id}>
-                <ProjectCard
-                  project={project}
-                  onEdit={isAdmin ? openEdit : undefined}
-                  onDelete={isAdmin ? deleteProject : undefined}
-                />
-              </Grid>
-            ))}
-          </Grid>
-
-          {hasMore && (
-            <Box sx={{ textAlign: "center", mt: 4 }}>
-              <Button variant="outlined" onClick={loadMore} disabled={loading}>
-                {loading ? "Loading..." : "Load More"}
-              </Button>
-            </Box>
-          )}
-        </>
-      )} */}
       {loading && projects.length === 0 ? (
         <Box className="projects-grid">
           {Array.from({ length: 6 }).map((_, i) => (
@@ -227,18 +191,6 @@ export default function Projects() {
             </Box>
           )}
         </>
-      )}
-
-      {/* ── Admin: Add Project FAB ──────────────────────────────────── */}
-      {isAdmin && (
-        <Fab
-          color="primary"
-          aria-label="add project"
-          onClick={openAdd}
-          sx={{ position: "fixed", bottom: 24, right: 24 }}
-        >
-          <AddIcon />
-        </Fab>
       )}
 
       {/* ── Add/Edit dialog ─────────────────────────────────────────── */}

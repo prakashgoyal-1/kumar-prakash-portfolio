@@ -56,6 +56,23 @@ services:
       timeout: 5s
       retries: 5
 
+  createbuckets:
+    image: minio/mc
+    networks:
+      - portfolio_net
+    depends_on:
+      minio:
+        condition: service_healthy
+    restart: on-failure
+    entrypoint: >
+      /bin/sh -c "
+      echo 'BUCKET NAME IS:' $${S3_BUCKET_NAME}, $${MINIO_ROOT_USER} , $${MINIO_ROOT_PASSWORD}  &&
+      mc alias set local http://minio:9000 $${MINIO_ROOT_USER} $${MINIO_ROOT_PASSWORD} &&
+      echo 'BUCKET NAME IS-2:' $${S3_BUCKET_NAME} &&
+      mc mb local/$${S3_BUCKET_NAME} --ignore-existing &&
+      echo 'Bucket ready.'
+      "
+
   backend:
     build:
       context: ./backend

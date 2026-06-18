@@ -1,10 +1,7 @@
-/* frontend/src/components/sections/ProjectCard/ProjectCard.css */
-
-/* Fixed overall card footprint — width comes from the Grid column, height is fixed */
 .project-card {
   position: relative;
   width: 100%;
-  height: 360px; /* ← THE fixed height that solves the "cards different sizes" issue */
+  height: 360px;
   display: flex;
   flex-direction: column;
   transition:
@@ -22,21 +19,9 @@
   flex-direction: column;
   flex: 1;
   align-items: stretch;
-  min-height: 0; /* CRITICAL: allows children to respect fixed heights instead of growing */
+  min-height: 0;
 }
 
-.project-card__admin-actions {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  z-index: 2;
-  display: flex;
-  gap: 2px;
-  background-color: rgba(255, 255, 255, 0.9);
-  border-radius: 8px;
-}
-
-/* Fixed-height image zone */
 .project-card__media-zone {
   height: 140px;
   flex-shrink: 0;
@@ -64,9 +49,6 @@
   letter-spacing: 1px;
 }
 
-/* Content area: explicit fixed height, NOT flex-grow based.
-   140 (media) + 154 (content) + 40 (links) = 334, leaving 26px breathing room
-   inside the 360px card — adjust card height below if you change this. */
 .project-card__content {
   height: 154px;
   flex-shrink: 0;
@@ -76,7 +58,6 @@
   overflow: hidden;
 }
 
-/* Title: exactly 1 line, ellipsis if too long */
 .project-card__title {
   height: 24px;
   line-height: 24px;
@@ -86,7 +67,6 @@
   flex-shrink: 0;
 }
 
-/* Description: exactly 2 lines via line-clamp, fixed height regardless of text length */
 .project-card__description {
   height: 40px;
   line-height: 20px;
@@ -98,7 +78,6 @@
   flex-shrink: 0;
 }
 
-/* Tech chips: fixed 28px slot, positioned with a hard top margin (not auto) */
 .project-card__tech-row {
   height: 28px;
   margin-top: 10px;
@@ -107,12 +86,18 @@
   flex-shrink: 0;
 }
 
+/* Links row now hosts BOTH external links (left) and admin actions (right) */
 .project-card__links-row {
   height: 40px;
   display: flex;
   align-items: center;
-  padding: 0 12px;
+  justify-content: space-between;
+  padding: 0 8px 0 12px;
   border-top: 1px solid;
   border-color: rgba(0, 0, 0, 0.08);
   flex-shrink: 0;
+}
+
+.project-card__admin-actions {
+  /* No special positioning needed now — flows naturally in the flex row */
 }

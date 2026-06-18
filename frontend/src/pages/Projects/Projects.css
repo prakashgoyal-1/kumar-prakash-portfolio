@@ -1,9 +1,18 @@
 /* frontend/src/pages/Projects/Projects.css */
 .projects-page {
   padding-top: 2.5rem;
-  padding-bottom: 5rem;
+  /* padding-bottom: 5rem; */
 }
 
+.projects-page__header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.projects-page__add-btn {
+  padding: 0.5rem 1rem !important;
+  margin: 16px !important;
+}
 /* CSS Grid with auto-fill: every column is EXACTLY 280px (or grows equally
    if space allows), and a sparse last row NEVER stretches its items wider
    than the columns above it. This is the fix for the uneven-width bug. */

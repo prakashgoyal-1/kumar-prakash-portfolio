@@ -34,37 +34,17 @@ const MAX_VISIBLE_TECHS = 4;
 
 export default function ProjectCard({ project, onEdit, onDelete }) {
   const [detailsOpen, setDetailsOpen] = useState(false);
-  const showActions = !!onEdit || !!onDelete;
+  const showAdminActions = !!onEdit || !!onDelete;
   const visibleTechs = (project.tech_stack || []).slice(0, MAX_VISIBLE_TECHS);
   const extraTechCount = (project.tech_stack || []).length - MAX_VISIBLE_TECHS;
 
   return (
     <>
       <Card className="project-card" variant="outlined">
-        {showActions && (
-          <Box className="project-card__admin-actions">
-            {onEdit && (
-              <Tooltip title="Edit project">
-                <IconButton size="small" onClick={() => onEdit(project)}>
-                  <EditIcon fontSize="small" />
-                </IconButton>
-              </Tooltip>
-            )}
-            {onDelete && (
-              <Tooltip title="Delete project">
-                <IconButton size="small" onClick={() => onDelete(project.id)}>
-                  <DeleteIcon fontSize="small" />
-                </IconButton>
-              </Tooltip>
-            )}
-          </Box>
-        )}
-
         <CardActionArea
           onClick={() => setDetailsOpen(true)}
           className="project-card__action-area"
         >
-          {/* Fixed-height image zone */}
           <Box className="project-card__media-zone">
             {project.image_url ? (
               <CardMedia
@@ -83,7 +63,6 @@ export default function ProjectCard({ project, onEdit, onDelete }) {
           </Box>
 
           <CardContent className="project-card__content">
-            {/* Fixed-height title zone (max 1 line) */}
             <Typography
               variant="h6"
               fontWeight={700}
@@ -92,7 +71,6 @@ export default function ProjectCard({ project, onEdit, onDelete }) {
               {project.title}
             </Typography>
 
-            {/* Fixed-height description zone (max 2 lines via CSS clamp) */}
             <Typography
               variant="body2"
               color="text.secondary"
@@ -101,7 +79,6 @@ export default function ProjectCard({ project, onEdit, onDelete }) {
               {project.description || ""}
             </Typography>
 
-            {/* Fixed-height tech chip zone (max 1 row) */}
             <Stack
               direction="row"
               spacing={0.5}
@@ -121,7 +98,7 @@ export default function ProjectCard({ project, onEdit, onDelete }) {
           </CardContent>
         </CardActionArea>
 
-        {/* Fixed-height link row — always present, icons hidden if absent */}
+        {/* ── Footer strip: links on left, admin actions on right ────────── */}
         <Box className="project-card__links-row">
           <Stack direction="row" spacing={0.5}>
             {project.repo_url && (
@@ -153,10 +130,32 @@ export default function ProjectCard({ project, onEdit, onDelete }) {
               </Tooltip>
             )}
           </Stack>
+
+          {showAdminActions && (
+            <Stack
+              direction="row"
+              spacing={0.5}
+              className="project-card__admin-actions"
+            >
+              {onEdit && (
+                <Tooltip title="Edit project">
+                  <IconButton size="small" onClick={() => onEdit(project)}>
+                    <EditIcon fontSize="small" />
+                  </IconButton>
+                </Tooltip>
+              )}
+              {onDelete && (
+                <Tooltip title="Delete project">
+                  <IconButton size="small" onClick={() => onDelete(project.id)}>
+                    <DeleteIcon fontSize="small" />
+                  </IconButton>
+                </Tooltip>
+              )}
+            </Stack>
+          )}
         </Box>
       </Card>
 
-      {/* ── Full-detail dialog on click ─────────────────────────────── */}
       <Dialog
         open={detailsOpen}
         onClose={() => setDetailsOpen(false)}
