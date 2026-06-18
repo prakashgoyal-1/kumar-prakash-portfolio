@@ -1,0 +1,21 @@
+.skill-chip-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.skill-chip {
+  font-weight: 500;
+}
+
+.skill-chip__dots {
+  font-size: 0.7rem;
+  letter-spacing: 1px;
+  opacity: 0.8;
+  margin-left: 4px;
+}
+
+.skill-chip__actions {
+  display: inline-flex;
+  gap: 0;
+}
