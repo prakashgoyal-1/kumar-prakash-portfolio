@@ -15,14 +15,15 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import Divider from "@mui/material/Divider";
 import MenuIcon from "@mui/icons-material/Menu";
-import Brightness4Icon from "@mui/icons-material/Brightness4";
-import Brightness7Icon from "@mui/icons-material/Brightness7";
 import LogoutIcon from "@mui/icons-material/Logout";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+import LightModeIcon from "@mui/icons-material/LightMode";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useUIStore } from "../../../store/uiStore";
 import { useAuth } from "../../../hooks/useAuth";
+import ThemeToggle from "../ThemeToggle/ThemeToggle";
 import { truncate } from "../../../utils/helpers";
 import "./Navbar.css";
 
@@ -36,8 +37,6 @@ const PUBLIC_NAV_LINKS = [
 
 export default function Navbar() {
   const theme = useTheme();
-  // Switched from "md" to "lg" breakpoint — gives nav links more room
-  // before collapsing, since 5 links + admin + user info needs ~960px+
   const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
   const location = useLocation();
   const navigate = useNavigate();
@@ -52,7 +51,8 @@ export default function Navbar() {
     setDrawerOpen(false);
   };
 
-  const isActive = (to) => location.pathname === to;
+  const isActive = (to) =>
+    to === "/" ? location.pathname === "/" : location.pathname.startsWith(to);
 
   const navBtnSx = (to) => ({
     fontWeight: isActive(to) ? 700 : 400,
@@ -65,15 +65,36 @@ export default function Navbar() {
     "&:hover": { backgroundColor: "rgba(255,255,255,0.08)" },
   });
 
-  // ── Drawer content (shown on mobile/tablet) ─────────────────────────────────
+  // ── Drawer content ────────────────────────────────────────────────────────
   const drawerContent = (
     <Box sx={{ width: 260 }} role="presentation">
-      <Box sx={{ p: 2 }}>
+      <Box
+        sx={{
+          p: 2,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
         <Typography variant="h6" fontWeight={700}>
           Portfolio
         </Typography>
+        {/* Theme toggle inside drawer too for convenience */}
+        <IconButton
+          size="small"
+          onClick={toggleTheme}
+          aria-label={`Switch to ${themeMode === "dark" ? "light" : "dark"} mode`}
+        >
+          {themeMode === "dark" ? (
+            <LightModeIcon fontSize="small" />
+          ) : (
+            <DarkModeIcon fontSize="small" />
+          )}
+        </IconButton>
       </Box>
+
       <Divider />
+
       <List>
         {PUBLIC_NAV_LINKS.map(({ label, to }) => (
           <ListItem key={to} disablePadding>
@@ -122,7 +143,13 @@ export default function Navbar() {
           <>
             <ListItem>
               <Avatar
-                sx={{ width: 28, height: 28, fontSize: "0.75rem", mr: 1.5 }}
+                sx={{
+                  width: 28,
+                  height: 28,
+                  fontSize: "0.75rem",
+                  mr: 1.5,
+                  bgcolor: theme.palette.primary.main,
+                }}
               >
                 {user.full_name?.[0]?.toUpperCase() ?? "U"}
               </Avatar>
@@ -138,19 +165,6 @@ export default function Navbar() {
             </ListItem>
           </>
         )}
-
-        <ListItem disablePadding>
-          <ListItemButton onClick={toggleTheme}>
-            {themeMode === "dark" ? (
-              <Brightness7Icon fontSize="small" sx={{ mr: 1.5 }} />
-            ) : (
-              <Brightness4Icon fontSize="small" sx={{ mr: 1.5 }} />
-            )}
-            <ListItemText
-              primary={themeMode === "dark" ? "Light mode" : "Dark mode"}
-            />
-          </ListItemButton>
-        </ListItem>
       </List>
     </Box>
   );
@@ -163,23 +177,31 @@ export default function Navbar() {
           variant="h6"
           component={RouterLink}
           to="/"
-          sx={{ fontWeight: 700, color: "inherit", textDecoration: "none" }}
+          sx={{
+            fontWeight: 700,
+            color: "inherit",
+            textDecoration: "none",
+            letterSpacing: 0.5,
+          }}
         >
           Portfolio
         </Typography>
 
         {isMobile ? (
-          // ── Mobile/tablet: hamburger only ──────────────────────────────
-          <IconButton
-            color="inherit"
-            edge="end"
-            aria-label="open navigation menu"
-            onClick={() => setDrawerOpen(true)}
-          >
-            <MenuIcon />
-          </IconButton>
+          // ── Mobile/tablet: theme toggle + hamburger ──────────────────────
+          <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+            <ThemeToggle />
+            <IconButton
+              color="inherit"
+              edge="end"
+              aria-label="open navigation menu"
+              onClick={() => setDrawerOpen(true)}
+            >
+              <MenuIcon />
+            </IconButton>
+          </Box>
         ) : (
-          // ── Desktop: full nav links ─────────────────────────────────────
+          // ── Desktop: full nav + theme toggle + auth ──────────────────────
           <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
             {PUBLIC_NAV_LINKS.map(({ label, to }) => (
               <Button
@@ -209,13 +231,16 @@ export default function Navbar() {
               </Tooltip>
             )}
 
+            {/* ThemeToggle sits between nav links and auth section */}
+            <ThemeToggle />
+
             {!isAuthenticated && (
               <Button
                 component={RouterLink}
                 to="/login"
                 color="inherit"
                 size="small"
-                sx={navBtnSx("/login")}
+                sx={{ ...navBtnSx("/login"), ml: 0.5 }}
               >
                 Login
               </Button>
@@ -253,20 +278,11 @@ export default function Navbar() {
                 </Tooltip>
               </>
             )}
-
-            <IconButton
-              color="inherit"
-              onClick={toggleTheme}
-              aria-label="toggle theme"
-              size="small"
-              sx={{ ml: 0.5 }}
-            >
-              {themeMode === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
-            </IconButton>
           </Box>
         )}
       </Toolbar>
 
+      {/* Right-anchor drawer for mobile nav */}
       <Drawer
         anchor="right"
         open={drawerOpen}

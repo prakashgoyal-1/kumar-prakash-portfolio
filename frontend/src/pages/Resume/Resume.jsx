@@ -104,7 +104,10 @@ export default function Resume() {
             variant="contained"
             startIcon={<DownloadIcon />}
             onClick={() =>
-              handleDownload(resume.download_url, "Kumar_Prakash_Resume.pdf")
+              handleDownload(
+                resume.download_url,
+                "Kumar_Prakash_FullStack_GenAI_Engineer_Resume.pdf",
+              )
             }
           >
             Download Resume
