@@ -1,0 +1,83 @@
+.hero-section {
+  width: 100%;
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle radial gradient backdrop — uses CSS variables from MUI theme */
+.hero-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at 50% 0%,
+    rgba(37, 99, 235, 0.08) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero-section__content {
+  position: relative;
+  z-index: 1;
+  max-width: 700px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.hero-section__avatar {
+  width: 100px !important;
+  height: 100px !important;
+  margin-bottom: 0.5rem;
+  border: 3px solid rgba(37, 99, 235, 0.3);
+}
+
+.hero-section__heading {
+  font-size: clamp(2rem, 6vw, 3.5rem) !important;
+  font-weight: 700 !important;
+  line-height: 1.15 !important;
+  letter-spacing: -0.5px;
+}
+
+.hero-section__name-highlight {
+  color: #2563eb;
+}
+
+.hero-section__title {
+  font-size: clamp(1.1rem, 3vw, 1.5rem) !important;
+  font-weight: 400 !important;
+}
+
+.hero-section__tagline {
+  max-width: 540px;
+  line-height: 1.7;
+  font-size: 1rem !important;
+}
+
+.hero-section__cta {
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 600px) {
+  .hero-section {
+    min-height: 60vh;
+    padding: 3rem 1.5rem;
+  }
+
+  .hero-section__cta {
+    width: 100%;
+  }
+
+  .hero-section__cta .MuiButton-root {
+    width: 100%;
+  }
+}
