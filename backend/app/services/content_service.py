@@ -8,6 +8,7 @@ from app.models.about import About
 from app.models.certification import Certification
 from app.models.skill import Skill
 from app.schemas.about import (
+    AboutOut,
     AboutUpdate,
     CertificationCreate,
     CertificationUpdate,
@@ -15,12 +16,84 @@ from app.schemas.about import (
     SkillUpdate,
 )
 
+import os
+from fastapi import UploadFile, HTTPException
+from app.services import storage_service
+
+ALLOWED_IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".gif"}
+MAX_PHOTO_MB = 5
+MAX_PHOTO_BYTES = MAX_PHOTO_MB * 1024 * 1024
+
+
+def _build_about_out(about: About) -> AboutOut:
+    """Build AboutOut, resolving photo_url from S3 key if present."""
+    out = AboutOut.model_validate(about)
+    if about.photo_key:
+        try:
+            out.photo_url = storage_service.generate_presigned_url(
+                about.photo_key,
+                expires_in=3600,
+            )
+        except Exception:
+            # Fall back to stored photo_url if presign fails
+            out.photo_url = about.photo_url
+    return out
+
+
+async def upload_about_photo(
+    db: AsyncSession, file: UploadFile
+) -> AboutOut:
+    # ── Validate ────────────────────────────────────────────────────────────
+    ext = os.path.splitext(file.filename or "")[1].lower()
+    if ext not in ALLOWED_IMAGE_EXTENSIONS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Unsupported image type. Allowed: JPG, PNG, WEBP, GIF",
+        )
+
+    file_bytes = await file.read()
+    if len(file_bytes) > MAX_PHOTO_BYTES:
+        raise HTTPException(
+            status_code=413,
+            detail=f"Photo too large. Max {MAX_PHOTO_MB}MB",
+        )
+
+    # ── Upload to MinIO ─────────────────────────────────────────────────────
+    photo_key = f"about/photo/{uuid.uuid4()}{ext}"
+    storage_service.upload_file(
+        file_bytes,
+        photo_key,
+        file.content_type or "image/jpeg",
+    )
+
+    # ── Upsert the About row with new photo_key ─────────────────────────────
+    result = await db.execute(select(About).limit(1))
+    about = result.scalar_one_or_none()
+
+    if about is None:
+        about = About(id=uuid.uuid4(), photo_key=photo_key)
+        db.add(about)
+    else:
+        # Delete old photo from MinIO if one existed
+        if about.photo_key:
+            try:
+                storage_service.delete_file(about.photo_key)
+            except Exception:
+                pass  # Non-fatal — old file cleanup is best-effort
+        about.photo_key = photo_key
+        about.photo_url = None  # clear any old external URL override
+
+    await db.flush()
+    return _build_about_out(about)
 
 # ── About (singleton) ─────────────────────────────────────────────────────────
 
 async def get_about(db: AsyncSession) -> About | None:
     result = await db.execute(select(About).limit(1))
-    return result.scalar_one_or_none()
+    about = result.scalar_one_or_none()
+    if about is None:
+        return None
+    return _build_about_out(about)
 
 
 async def upsert_about(db: AsyncSession, data: AboutUpdate) -> About:
@@ -33,8 +106,7 @@ async def upsert_about(db: AsyncSession, data: AboutUpdate) -> About:
         db.add(about)
 
     # Apply only the fields that were provided (partial update)
-    update_data = data.model_dump(exclude_unset=True)
-    for field, value in update_data.items():
+    for field, value in data.model_dump(exclude_unset=True).items():
         setattr(about, field, value)
 
     await db.flush()

@@ -1,7 +1,7 @@
 import uuid
 from datetime import date
 
-from pydantic import BaseModel, ConfigDict, HttpUrl, Field
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Optional
 
 
@@ -9,9 +9,11 @@ from typing import Optional
 
 class AboutUpdate(BaseModel):
     bio: Optional[str] = None
-    photo_url: Optional[str] = None
     title: Optional[str] = None
     location: Optional[str] = None
+    # photo_url removed from update — use POST /about/photo to change photo
+    # Keep for backward compat (external URL override):
+    photo_url: Optional[str] = None
 
 
 class AboutOut(BaseModel):
@@ -19,6 +21,8 @@ class AboutOut(BaseModel):
 
     id: uuid.UUID
     bio: Optional[str] = None
+    # photo_url is populated at response time — either from presigned URL
+    # (if photo_key exists) or from the stored photo_url field
     photo_url: Optional[str] = None
     title: Optional[str] = None
     location: Optional[str] = None

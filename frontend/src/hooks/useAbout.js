@@ -160,6 +160,21 @@ export function useAbout() {
     [showToast],
   );
 
+  const uploadPhoto = useCallback(
+    async (file) => {
+      try {
+        const updated = await aboutApi.uploadAboutPhoto(file);
+        setAbout(updated);
+        showToast("Photo updated", "success");
+        return true;
+      } catch (err) {
+        showToast(err.response?.data?.detail || "Photo upload failed", "error");
+        return false;
+      }
+    },
+    [showToast],
+  );
+
   return {
     about,
     skills,
@@ -173,6 +188,7 @@ export function useAbout() {
     addCertification,
     editCertification,
     removeCertification,
+    uploadPhoto,
     reload: loadAll,
   };
 }
