@@ -36,6 +36,25 @@ export default function Resume() {
     if (ok) setPendingFile(null);
   };
 
+  const handleDownload = async (url, filename) => {
+    try {
+      const response = await fetch(url);
+      if (!response.ok) throw new Error("Failed to fetch file");
+      const blob = await response.blob();
+
+      const blobUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (err) {
+      console.error("Download failed:", err);
+    }
+  };
+
   // ── Loading state ────────────────────────────────────────────────────────
   if (loading) {
     return (
@@ -84,9 +103,9 @@ export default function Resume() {
           <Button
             variant="contained"
             startIcon={<DownloadIcon />}
-            href={resume.download_url}
-            target="_blank"
-            rel="noopener noreferrer"
+            onClick={() =>
+              handleDownload(resume.download_url, "Kumar_Prakash_Resume.pdf")
+            }
           >
             Download Resume
           </Button>
