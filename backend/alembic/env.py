@@ -15,6 +15,7 @@ from app.models import skill      # noqa: F401
 from app.models import certification  # noqa: F401
 from app.models import project        # noqa: F401
 from app.models import resume         # noqa: F401
+from app.models import feedback       # noqa: F401
 
 # Alembic Config object — gives access to alembic.ini values
 config = context.config
