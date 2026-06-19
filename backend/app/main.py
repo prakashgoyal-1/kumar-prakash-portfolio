@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
-from app.routers import auth, about, projects, resume, feedback
+from app.routers import admin, auth, about, projects, resume, feedback
 
 app = FastAPI(
     title="Personal Portfolio API",
@@ -37,3 +37,4 @@ app.include_router(about.router)
 app.include_router(projects.router)
 app.include_router(resume.router)
 app.include_router(feedback.router)
+app.include_router(admin.router)
