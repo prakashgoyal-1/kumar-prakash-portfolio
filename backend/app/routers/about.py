@@ -1,6 +1,6 @@
 import uuid
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, File, UploadFile
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
@@ -37,6 +37,14 @@ async def update_about(
     _admin: User = Depends(require_admin),
 ):
     return await content_service.upsert_about(db, data)
+
+@router.post("/photo", response_model=AboutOut)
+async def upload_about_photo(
+    file: UploadFile = File(...),
+    db: AsyncSession = Depends(get_db),
+    _admin: User = Depends(require_admin),
+):
+    return await content_service.upload_about_photo(db, file)
 
 
 # ── Skills ────────────────────────────────────────────────────────────────────

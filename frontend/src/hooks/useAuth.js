@@ -7,6 +7,7 @@ export function useAuth() {
     user,
     accessToken,
     refreshToken,
+    _hasHydrated,
     setTokens,
     setUser,
     logout: storeLogout,
@@ -20,13 +21,17 @@ export function useAuth() {
 
   // ── Re-fetch user profile on mount if token exists but user is null ─────────
   useEffect(() => {
+    if (!_hasHydrated) return; // wait for localStorage rehydration
+    if (!accessToken) return; // no token — nothing to do
+    if (user) return; // user already loaded — skip
+
     if (isAuthenticated && !user) {
       authApi
         .getMe()
         .then(setUser)
         .catch(() => storeLogout()); // token is invalid — clear everything
     }
-  }, [isAuthenticated, user, setUser, storeLogout]);
+  }, [_hasHydrated, accessToken, user, setUser, storeLogout]);
 
   // ── Login with email + password ──────────────────────────────────────────────
   const login = useCallback(
@@ -107,6 +112,7 @@ export function useAuth() {
     refreshToken,
     isAuthenticated,
     isAdmin,
+    isHydrated: _hasHydrated, // expose so guards can wait
     login,
     register,
     loginWithGoogle,

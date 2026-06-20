@@ -34,3 +34,15 @@ export const updateCertification = (id, data) =>
 
 export const deleteCertification = (id) =>
   client.delete(`/api/about/certifications/${id}`).then((r) => r.data);
+
+// ── Upload Photo ────────────────────────────────────────────────────────────
+
+export const uploadAboutPhoto = (file) => {
+  const formData = new FormData();
+  formData.append("file", file);
+  return client
+    .post("/api/about/photo", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    })
+    .then((r) => r.data);
+};

@@ -1,9 +1,30 @@
-.page-placeholder {
-  display: flex;
-  flex-direction: column;
+.feedback-page {
+  padding-top: 2.5rem;
+  padding-bottom: 4rem;
+}
+
+.feedback-form {
+  background-color: transparent;
+}
+
+/* Badge showing pending count inside the Accordion header */
+.feedback-page__pending-badge {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 60vh;
-  gap: 1rem;
-  text-align: center;
+  background-color: #f59e0b;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  border-radius: 12px;
+  padding: 1px 8px;
+  margin-left: 10px;
+  vertical-align: middle;
+  line-height: 1.6;
+}
+
+@media (max-width: 600px) {
+  .feedback-page {
+    padding-top: 1.5rem;
+  }
 }

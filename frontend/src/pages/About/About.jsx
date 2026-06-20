@@ -26,6 +26,7 @@ import { useAuth } from "../../hooks/useAuth";
 import SkillChip from "../../components/sections/SkillChip/SkillChip";
 import { formatDate } from "../../utils/helpers";
 import "./About.css";
+import FileDropzone from "../../components/ui/FileDropzone/FileDropzone";
 
 const SKILL_LEVELS = [1, 2, 3, 4, 5];
 
@@ -38,6 +39,7 @@ export default function About() {
     loading,
     error,
     saveAbout,
+    uploadPhoto,
     addSkill,
     editSkill,
     removeSkill,
@@ -207,14 +209,31 @@ export default function About() {
                   setProfileForm((p) => ({ ...p, location: e.target.value }))
                 }
               />
-              <TextField
+              {/* <TextField
                 label="Photo URL"
                 fullWidth
                 value={profileForm.photo_url}
                 onChange={(e) =>
                   setProfileForm((p) => ({ ...p, photo_url: e.target.value }))
                 }
-              />
+              /> */}
+              <Box>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ mb: 0.75 }}
+                >
+                  Profile Photo (JPG, PNG, WEBP — max 5MB)
+                </Typography>
+                <FileDropzone
+                  accept="image/*"
+                  label="Drag and drop a photo, or click to browse"
+                  maxSizeMB={5}
+                  onFileSelect={async (file) => {
+                    await uploadPhoto(file);
+                  }}
+                />
+              </Box>
               <TextField
                 label="Bio"
                 fullWidth

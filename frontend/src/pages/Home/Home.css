@@ -1,9 +1,55 @@
-.page-placeholder {
+.home-page {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* Each content section gets consistent vertical padding */
+.home-page__section {
+  padding-top: 3.5rem;
+  padding-bottom: 3.5rem;
+}
+
+/* Section header: title on left, "view all" link on right */
+.home-page__section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  gap: 12px;
+}
+
+/* Hero skeleton: centered, matches HeroSection layout */
+.home-page__hero-skeleton {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 60vh;
+  min-height: 70vh;
   gap: 1rem;
-  text-align: center;
+  padding: 4rem 2rem;
+}
+
+/* Featured projects: 3-col CSS grid matching Projects page */
+.home-projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+  justify-content: start;
+}
+
+@media (max-width: 600px) {
+  .home-page__section {
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
+  }
+
+  .home-page__section-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .home-projects-grid {
+    grid-template-columns: 1fr;
+  }
 }
